@@ -1,0 +1,41 @@
+/* components/Sidebar.css */
+.sidebar {
+    width: 250px;
+    background-color: #161616;
+    padding: 20px;
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+  
+  .logo-icon {
+    font-size: 24px;
+    color: #4c9aff;
+    margin-right: 10px;
+  }
+  
+  .logo-text {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .sidebar nav ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .sidebar nav li {
+    padding: 10px 0;
+    cursor: pointer;
+  }
+  
+  .sidebar nav li.active {
+    color: #4c9aff;
+  }
+  
+  .sidebar nav .icon {
+    margin-right: 10px;
+  }
