@@ -9,7 +9,7 @@ const initialData = {
     'task-1': { id: 'task-1', title:'Deletion of user on User Platform',description: 'User have been deleted successfully All details attached below Endpoint APi: https://exmapleapi.api/ Figma Link: https://figmaexample/2joasdad.com', storyPoints: '2', storyType: 'dev' },
     'task-2': { id: 'task-2', title:'title',description: 'create a post', storyPoints: '3', storyType: 'qa' },
     'task-3': { id: 'task-3', title:'title',description: 'api integration', storyPoints: '1', storyType: 'dev' },
-    'task-4': { id: 'task-4', title:'title',description: 'building notification', storyPoints: '5', storyType: 'dev' },
+    'task-4': { id: 'task-4', title:'title',description: 'building notification', storyPoints: '5', storyType: 'dev1' },
   },
   columns: {
     'column-1': {
