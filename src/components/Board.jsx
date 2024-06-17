@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Modal from 'react-modal';
 import './Board.css';
-import {ask} from '../Chat'
+import { ask } from '../Chat'
+import { v4 as uuidv4 } from 'uuid';
+ 
 const initialData = {
   tasks: {
     'task-1': { id: 'task-1', title: 'Deletion of user on User Platform', description: 'User have been deleted successfully All details attached below Endpoint APi: https://exmapleapi.api/ Figma Link: https://figmaexample/2joasdad.com', storyPoints: '2', storyType: 'dev' },
@@ -27,41 +29,41 @@ const initialData = {
   },
   columnOrder: ['column-1', 'column-2', 'column-3'],
 };
-
+ 
 function Board() {
   const [state, setState] = useState(initialData);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [activeColumn, setActiveColumn] = useState('column-1');
   const [selectedTask, setSelectedTask] = useState(null);
   const [storyType, setStoryType] = useState('dev'); // Added state for story type
-
+ 
   const onDragEnd = (result) => {
     const { destination, source, draggableId } = result;
-
+ 
     if (!destination) {
       return;
     }
-
+ 
     if (
       destination.droppableId === source.droppableId &&
       destination.index === source.index
     ) {
       return;
     }
-
+ 
     const start = state.columns[source.droppableId];
     const finish = state.columns[destination.droppableId];
-
+ 
     if (start === finish) {
       const newTaskIds = Array.from(start.taskIds);
       newTaskIds.splice(source.index, 1);
       newTaskIds.splice(destination.index, 0, draggableId);
-
+ 
       const newColumn = {
         ...start,
         taskIds: newTaskIds,
       };
-
+ 
       const newState = {
         ...state,
         columns: {
@@ -69,11 +71,11 @@ function Board() {
           [newColumn.id]: newColumn,
         },
       };
-
+ 
       setState(newState);
       return;
     }
-
+ 
     // Moving from one list to another
     const startTaskIds = Array.from(start.taskIds);
     startTaskIds.splice(source.index, 1);
@@ -81,14 +83,14 @@ function Board() {
       ...start,
       taskIds: startTaskIds,
     };
-
+ 
     const finishTaskIds = Array.from(finish.taskIds);
     finishTaskIds.splice(destination.index, 0, draggableId);
     const newFinish = {
       ...finish,
       taskIds: finishTaskIds,
     };
-
+ 
     const newState = {
       ...state,
       columns: {
@@ -99,20 +101,20 @@ function Board() {
     };
     setState(newState);
   };
-
+ 
   const onAddTask = (columnId) => {
     setActiveColumn(columnId);
     setSelectedTask(null);
     setIsPopupOpen(true);
   };
-
+ 
   const onTaskClick = (task) => {
     setSelectedTask(task);
     setIsPopupOpen(true);
   };
-
+ 
   const handleCreateTask = (taskData) => {
-    const newTaskId = `task-${Date.now()}`;
+    const newTaskId = `task-${uuidv4()}`;
     console.log(taskData);
     const newTask = {
       id: newTaskId,
@@ -121,40 +123,43 @@ function Board() {
       storyPoints: taskData.storyPoints.toString(),
       storyType: taskData.storyType,
     };
-  
+ 
     // Check if activeColumn is defined
     if (!activeColumn) {
       console.error("activeColumn is not defined");
       return;
     }
-  
+ 
     // Check if the active column exists in the state
     const activeColumnData = state.columns[activeColumn];
     if (!activeColumnData) {
       console.error(`Column with id ${activeColumn} does not exist`);
       return;
     }
-  
-    const newState = {
-      ...state,
-      tasks: {
-        ...state.tasks,
-        [newTaskId]: newTask,
-      },
-      columns: {
-        ...state.columns,
-        [activeColumn]: {
-          ...state.columns[activeColumn],
-          taskIds: [...state.columns[activeColumn].taskIds, newTaskId],
+ 
+    setState((prevState) => {
+      const newState = {
+        ...prevState,
+        tasks: {
+          ...prevState.tasks,
+          [newTaskId]: newTask,
         },
-      },
-    };
-  
-    setState(newState);
+        columns: {
+          ...prevState.columns,
+          [activeColumn]: {
+            ...prevState.columns[activeColumn],
+            taskIds: [...prevState.columns[activeColumn].taskIds, newTaskId],
+          },
+        },
+      };
+      return newState
+    })
+ 
+    // setState(newState);
     setIsPopupOpen(false);
   };
-  
-
+ 
+ 
   return (
     <div className="board">
       <div className="board-header">
@@ -172,7 +177,7 @@ function Board() {
           {state.columnOrder.map((columnId) => {
             const column = state.columns[columnId];
             const tasks = column.taskIds.map((taskId) => state.tasks[taskId]);
-
+ 
             return (
               <Column
                 key={column.id}
@@ -196,7 +201,7 @@ function Board() {
     </div>
   );
 }
-
+ 
 function Column({ column, tasks, onAddTask, onTaskClick }) {
   return (
     <div className="column">
@@ -219,7 +224,7 @@ function Column({ column, tasks, onAddTask, onTaskClick }) {
     </div>
   );
 }
-
+ 
 function Task({ task, index, onTaskClick }) {
   return (
     <Draggable draggableId={task.id} index={index}>
@@ -240,12 +245,12 @@ function Task({ task, index, onTaskClick }) {
     </Draggable>
   );
 }
-
+ 
 function TaskCreationPopup({ isOpen, onClose, onSubmit, selectedTask, storyType, setStoryType }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [storyPoints, setStoryPoints] = useState(0);
-
+ 
   const handleSubmit = () => {
     onSubmit({ title, description, storyPoints, storyType });
     setTitle('');
@@ -254,27 +259,24 @@ function TaskCreationPopup({ isOpen, onClose, onSubmit, selectedTask, storyType,
   };
   const generateSubtask = async () => {
     console.log(selectedTask.id);
-    
+ 
     try {
       const res = await ask(title, description, storyPoints);
-      console.log(res);
-      console.log(res.subtasks);
-    
       const { development, unitTestscase, qa } = res.subtasks;
-    
+ 
       // Create an array of subtasks
       const subtasks = [
         { ...development, parentId: selectedTask.id, storyType: 'development' },
         { ...unitTestscase, parentId: selectedTask.id, storyType: 'unitTestscase' },
         { ...qa, parentId: selectedTask.id, storyType: 'qa' }
       ];
-  
+ 
       // Sequentially create tasks
       for (let subtask of subtasks) {
         let randomNumber = Math.floor(Math.random() * 1000);
         let paddedNumber = randomNumber.toString().padStart(3, '0');
         let randomRDP = `RDP-${paddedNumber}`;
-        
+ 
         const taskData = {
           id: randomRDP,
           title: subtask.title,
@@ -282,9 +284,8 @@ function TaskCreationPopup({ isOpen, onClose, onSubmit, selectedTask, storyType,
           storyPoints: subtask.storyPoints.toString(),
           storyType: subtask.storyType // Assuming storyType is development, unitTestscase, or qa
         };
-    
-        //console.log(subtask);
-         onSubmit(taskData); // Wait for task creation to complete
+ 
+        onSubmit(taskData); // Wait for task creation to complete
       }
     } catch (error) {
       console.error('Error creating subtasks:', error);
@@ -303,7 +304,7 @@ function TaskCreationPopup({ isOpen, onClose, onSubmit, selectedTask, storyType,
       setStoryType('dev');
     }
   }, [selectedTask, setStoryType]);
-
+ 
   return (
     <Modal isOpen={isOpen} onRequestClose={onClose} contentLabel="Task Creation Popup">
       <h2>{selectedTask ? 'Edit Task' : 'Create New Task'}</h2>
@@ -321,5 +322,6 @@ function TaskCreationPopup({ isOpen, onClose, onSubmit, selectedTask, storyType,
     </Modal>
   );
 }
-
+ 
 export default Board;
+ 
