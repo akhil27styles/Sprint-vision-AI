@@ -3,7 +3,7 @@ import { ChatPromptTemplate } from "@langchain/core/prompts";
 
 import { z } from "zod";
 import { StructuredOutputParser } from "langchain/output_parsers";
-const apiKey = 'api-key';
+const apiKey = 'api';
 
 const model = new ChatGoogleGenerativeAI({  modelName: "gemini-pro",apiKey:apiKey,temperature:0.9});
 
@@ -31,6 +31,7 @@ export async function ask(title:any,desc:any,storyPoints:any)
         description: z.string().describe("Description of the story"),
         storyPoints: z.number().describe("Story points for the story"),
       }),
+      length:z.number().describe('length of the subtasks object')
     }).describe("Breakdown of subtasks"),
   });
   

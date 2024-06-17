@@ -103,9 +103,9 @@ function App() {
   return (
     <div className="app">
       <Sidebar />
-        <Board />
       <div className="main-content">
         <Header />
+        <Board />
       </div>
     </div>
   );

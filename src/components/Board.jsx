@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Modal from 'react-modal';
-import { ask } from '../Chat';
 import './Board.css';
-
+import {ask} from '../Chat'
 const initialData = {
   tasks: {
-    'task-1': { id: 'task-1', title:'Deletion of user on User Platform',description: 'User have been deleted successfully All details attached below Endpoint APi: https://exmapleapi.api/ Figma Link: https://figmaexample/2joasdad.com', storyPoints: '2', storyType: 'dev' },
-    'task-2': { id: 'task-2', title:'title',description: 'create a post', storyPoints: '3', storyType: 'qa' },
-    'task-3': { id: 'task-3', title:'title',description: 'api integration', storyPoints: '1', storyType: 'dev' },
-    'task-4': { id: 'task-4', title:'title',description: 'building notification', storyPoints: '5', storyType: 'dev' },
+    'task-1': { id: 'task-1', title: 'Deletion of user on User Platform', description: 'User have been deleted successfully All details attached below Endpoint APi: https://exmapleapi.api/ Figma Link: https://figmaexample/2joasdad.com', storyPoints: '2', storyType: 'dev' },
+    'task-2': { id: 'task-2', title: 'title', description: 'create a post', storyPoints: '3', storyType: 'qa' },
   },
   columns: {
     'column-1': {
@@ -20,12 +17,12 @@ const initialData = {
     'column-2': {
       id: 'column-2',
       title: 'IN PROGRESS',
-      taskIds: ['task-2', 'task-3',],
+      taskIds: ['task-2'],
     },
     'column-3': {
       id: 'column-3',
       title: 'DONE',
-      taskIds: [ 'task-4'],
+      taskIds: [],
     },
   },
   columnOrder: ['column-1', 'column-2', 'column-3'],
@@ -34,7 +31,7 @@ const initialData = {
 function Board() {
   const [state, setState] = useState(initialData);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [activeColumn, setActiveColumn] = useState(null);
+  const [activeColumn, setActiveColumn] = useState('column-1');
   const [selectedTask, setSelectedTask] = useState(null);
   const [storyType, setStoryType] = useState('dev'); // Added state for story type
 
@@ -116,14 +113,28 @@ function Board() {
 
   const handleCreateTask = (taskData) => {
     const newTaskId = `task-${Date.now()}`;
+    console.log(taskData);
     const newTask = {
       id: newTaskId,
-      title:taskData.title,
+      title: taskData.title,
       description: taskData.description,
       storyPoints: taskData.storyPoints.toString(),
       storyType: taskData.storyType,
     };
-
+  
+    // Check if activeColumn is defined
+    if (!activeColumn) {
+      console.error("activeColumn is not defined");
+      return;
+    }
+  
+    // Check if the active column exists in the state
+    const activeColumnData = state.columns[activeColumn];
+    if (!activeColumnData) {
+      console.error(`Column with id ${activeColumn} does not exist`);
+      return;
+    }
+  
     const newState = {
       ...state,
       tasks: {
@@ -138,44 +149,11 @@ function Board() {
         },
       },
     };
-
+  
     setState(newState);
     setIsPopupOpen(false);
   };
-
-  const handleGenerateSubtask = async (parentTask) => {
-    const apiResponse = await ask(parentTask.description, parentTask.storyPoints);
-
-    const subtaskData = apiResponse.subtasks; // Extract subtasks from API response
-    const subtasks = Object.keys(subtaskData).map((key) => {
-      const subtask = subtaskData[key];
-      return {
-        id: `subtask-${Date.now()}-${key}`,
-        title:subtask.title,
-        description: subtask.description || `Subtask of ${parentTask.description}`,
-        storyPoints: subtask.storyPoints || parentTask.storyPoints,
-        storyType: key,
-        parentId: parentTask.id, // Link to parent task
-      };
-    });
-
-    const newState = {
-      ...state,
-      tasks: {
-        ...state.tasks,
-        ...Object.fromEntries(subtasks.map((subtask) => [subtask.id, subtask])),
-      },
-      columns: {
-        ...state.columns,
-        [activeColumn]: {
-          ...state.columns[activeColumn],
-          taskIds: [...state.columns[activeColumn].taskIds, ...subtasks.map((subtask) => subtask.id)],
-        },
-      },
-    };
-
-    setState(newState);
-  };
+  
 
   return (
     <div className="board">
@@ -196,23 +174,22 @@ function Board() {
             const tasks = column.taskIds.map((taskId) => state.tasks[taskId]);
 
             return (
-              <Column 
-                key={column.id} 
-                column={column} 
-                tasks={tasks} 
-                onAddTask={onAddTask} 
-                onTaskClick={onTaskClick} 
+              <Column
+                key={column.id}
+                column={column}
+                tasks={tasks}
+                onAddTask={onAddTask}
+                onTaskClick={onTaskClick}
               />
             );
           })}
         </div>
       </DragDropContext>
-      <TaskCreationPopup 
-        isOpen={isPopupOpen} 
-        onClose={() => setIsPopupOpen(false)} 
-        onSubmit={handleCreateTask} 
+      <TaskCreationPopup
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+        onSubmit={handleCreateTask}
         selectedTask={selectedTask}
-        onGenerateSubtask={handleGenerateSubtask} // Pass handleGenerateSubtask function
         storyType={storyType} // Pass story type
         setStoryType={setStoryType} // Pass setStoryType function
       />
@@ -254,18 +231,17 @@ function Task({ task, index, onTaskClick }) {
           className="card"
           onClick={() => onTaskClick(task)}
         >
-        <p>{task.title}</p>
+          <p>{task.title}</p>
           <p>{task.description}</p>
           {task.storyPoints && <span className="card-id">{task.storyPoints}</span>}
           <span className="card-story-type">{task.storyType}</span>
-          {task.parentId && <span className="parent-id">Parent ID: {task.parentId}</span>}
         </div>
       )}
     </Draggable>
   );
 }
 
-function TaskCreationPopup({ isOpen, onClose, onSubmit, selectedTask, onGenerateSubtask, storyType, setStoryType }) {
+function TaskCreationPopup({ isOpen, onClose, onSubmit, selectedTask, storyType, setStoryType }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [storyPoints, setStoryPoints] = useState(0);
@@ -276,15 +252,48 @@ function TaskCreationPopup({ isOpen, onClose, onSubmit, selectedTask, onGenerate
     setDescription('');
     setStoryPoints(0);
   };
-
-  const generateSubtask = () => {
-    onGenerateSubtask(selectedTask);
+  const generateSubtask = async () => {
+    console.log(selectedTask.id);
+    
+    try {
+      const res = await ask(title, description, storyPoints);
+      console.log(res);
+      console.log(res.subtasks);
+    
+      const { development, unitTestscase, qa } = res.subtasks;
+    
+      // Create an array of subtasks
+      const subtasks = [
+        { ...development, parentId: selectedTask.id, storyType: 'development' },
+        { ...unitTestscase, parentId: selectedTask.id, storyType: 'unitTestscase' },
+        { ...qa, parentId: selectedTask.id, storyType: 'qa' }
+      ];
+  
+      // Sequentially create tasks
+      for (let subtask of subtasks) {
+        let randomNumber = Math.floor(Math.random() * 1000);
+        let paddedNumber = randomNumber.toString().padStart(3, '0');
+        let randomRDP = `RDP-${paddedNumber}`;
+        
+        const taskData = {
+          id: randomRDP,
+          title: subtask.title,
+          description: subtask.description,
+          storyPoints: subtask.storyPoints.toString(),
+          storyType: subtask.storyType // Assuming storyType is development, unitTestscase, or qa
+        };
+    
+        //console.log(subtask);
+         onSubmit(taskData); // Wait for task creation to complete
+      }
+    } catch (error) {
+      console.error('Error creating subtasks:', error);
+    }
   };
-
   React.useEffect(() => {
     if (selectedTask) {
       setTitle(selectedTask.title);
-      setDescription(selectedTask.description)
+      setDescription(selectedTask.description);
       setStoryPoints(parseInt(selectedTask.storyPoints) || 0);
       setStoryType(selectedTask.storyType || 'dev');
     } else {
@@ -308,7 +317,7 @@ function TaskCreationPopup({ isOpen, onClose, onSubmit, selectedTask, onGenerate
       </select>
       <button onClick={handleSubmit}>{selectedTask ? 'Update' : 'Create'}</button>
       <button onClick={onClose}>Cancel</button>
-      {selectedTask && <button onClick={generateSubtask}>Generate Subtask</button>}
+      <button onClick={generateSubtask}>Generate Subtask</button>
     </Modal>
   );
 }
