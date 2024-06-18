@@ -110,7 +110,8 @@
 
 .ReactModal__Content h2 {
     margin-top: 0;
-    color: #fff;
+    color: black;
+    margin: 0;
 }
 
 .ReactModal__Content input,
@@ -125,9 +126,10 @@
 }
 
 .ReactModal__Content button {
-    padding: 10px 15px;
+    padding: 10px 20px;
     border: none;
     border-radius: 5px;
+    min-width: 100px;
     cursor: pointer;
 }
 
@@ -140,4 +142,8 @@
 .ReactModal__Content button:last-of-type {
     background-color: #f44336;
     color: #fff;
+}
+
+.ReactModal__Content .cancel{
+    cursor: pointer;
 }
