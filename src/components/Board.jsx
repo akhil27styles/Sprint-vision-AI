@@ -7,8 +7,8 @@ import { v4 as uuidv4 } from 'uuid';
  
 const initialData = {
   tasks: {
-    'task-1': { id: 'task-1', title: 'Deletion of user on User Platform', description: 'User have been deleted successfully All details attached below Endpoint APi: https://exmapleapi.api/ Figma Link: https://figmaexample/2joasdad.com', storyPoints: '2', storyType: 'dev' },
-    'task-2': { id: 'task-2', title: 'title', description: 'create a post', storyPoints: '3', storyType: 'qa' },
+    'task-1': { id: 'task-1', storyId:'RDP-234',title: 'Deletion of user on User Platform', description: 'User have been deleted successfully All details attached below Endpoint APi: https://exmapleapi.api/ Figma Link: https://figmaexample/2joasdad.com', storyPoints: '2', storyType: 'dev' },
+    'task-2': { id: 'task-2', storyId:'RDP-234',title: 'title', description: 'create a post', storyPoints: '3', storyType: 'qa' },
   },
   columns: {
     'column-1': {
@@ -122,6 +122,7 @@ function Board() {
       description: taskData.description,
       storyPoints: taskData.storyPoints.toString(),
       storyType: taskData.storyType,
+      ...(taskData.parentId)&& {parentId:taskData.parentId}
     };
  
     // Check if activeColumn is defined
@@ -236,6 +237,8 @@ function Task({ task, index, onTaskClick }) {
           className="card"
           onClick={() => onTaskClick(task)}
         >
+          {task.parentId && <p>Subtask of {task.parentId}</p>}
+          <p>{task.id}</p>
           <p>{task.title}</p>
           <p>{task.description}</p>
           {task.storyPoints && <span className="card-id">{task.storyPoints}</span>}
@@ -275,9 +278,10 @@ function TaskCreationPopup({ isOpen, onClose, onSubmit, selectedTask, storyType,
       for (let subtask of subtasks) {
         let randomNumber = Math.floor(Math.random() * 1000);
         let paddedNumber = randomNumber.toString().padStart(3, '0');
-        let randomRDP = `RDP-${paddedNumber}`;
+        let randomRDP = `task-${paddedNumber}`;
  
         const taskData = {
+          parentId:selectedTask.id,
           id: randomRDP,
           title: subtask.title,
           description: subtask.description,
