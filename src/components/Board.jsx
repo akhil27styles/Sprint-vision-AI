@@ -115,7 +115,6 @@ function Board() {
  
   const handleCreateTask = (taskData) => {
     const newTaskId = `task-${uuidv4()}`;
-    console.log(taskData);
     const newTask = {
       id: newTaskId,
       title: taskData.title,
@@ -263,11 +262,12 @@ function TaskCreationPopup({ isOpen, onClose, onSubmit, selectedTask, storyType,
     try {
       const res = await ask(title, description, storyPoints);
       const { development, unitTestscase, qa } = res.subtasks;
- 
+      let updatedUnitTestscase = { ...unitTestscase, description: res.unitTest.scenarios };
+
       // Create an array of subtasks
       const subtasks = [
         { ...development, parentId: selectedTask.id, storyType: 'development' },
-        { ...unitTestscase, parentId: selectedTask.id, storyType: 'unitTestscase' },
+        { ...updatedUnitTestscase, parentId: selectedTask.id, storyType: 'unitTestscase' },
         { ...qa, parentId: selectedTask.id, storyType: 'qa' }
       ];
  
