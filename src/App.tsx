@@ -103,10 +103,10 @@ import './App.css';
 function App() {
   return (
     <div className="app">
-      {/* <Sidebar /> */}
+      <Sidebar />
       <div className="main-content">
-        {/* <Header />
-        <Board /> */}
+        <Header />
+        <Board />
         <Rag/>
       </div>
     </div>

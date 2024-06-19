@@ -3,8 +3,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-// const fs = require('fs');
-// const path = require('path');
+const fs = require('fs');
+const path = require('path');
 const {
   StreamingTextResponse,
   createStreamDataTransformer
