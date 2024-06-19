@@ -4,11 +4,12 @@ import Modal from 'react-modal';
 import './Board.css';
 import { ask } from '../Chat'
 import { v4 as uuidv4 } from 'uuid';
+import { XMarkIcon } from '@heroicons/react/16/solid';
  
 const initialData = {
   tasks: {
-    'task-1': { id: 'task-1', title: 'Deletion of user on User Platform', description: 'User have been deleted successfully All details attached below Endpoint APi: https://exmapleapi.api/ Figma Link: https://figmaexample/2joasdad.com', storyPoints: '2', storyType: 'dev' },
-    'task-2': { id: 'task-2', title: 'title', description: 'create a post', storyPoints: '3', storyType: 'qa' },
+    'task-1': { id: 'task-1', storyId:'RDP-234',title: 'Deletion of user on User Platform', description: 'User have been deleted successfully All details attached below Endpoint APi: https://exmapleapi.api/ Figma Link: https://figmaexample/2joasdad.com', storyPoints: '2', storyType: 'dev' },
+    'task-2': { id: 'task-2', storyId:'RDP-234',title: 'title', description: 'create a post', storyPoints: '3', storyType: 'qa' },
   },
   columns: {
     'column-1': {
@@ -114,13 +115,14 @@ function Board() {
   };
  
   const handleCreateTask = (taskData) => {
-    const newTaskId = `task-${uuidv4()}`;
+    const newTaskId = taskData.id;
     const newTask = {
-      id: newTaskId,
+      id: taskData.id,
       title: taskData.title,
       description: taskData.description,
       storyPoints: taskData.storyPoints.toString(),
       storyType: taskData.storyType,
+      // ...(taskData.parentId)&& {parentId:taskData.parentId}
     };
  
     // Check if activeColumn is defined
@@ -137,6 +139,7 @@ function Board() {
     }
  
     setState((prevState) => {
+
       const newState = {
         ...prevState,
         tasks: {
@@ -147,7 +150,7 @@ function Board() {
           ...prevState.columns,
           [activeColumn]: {
             ...prevState.columns[activeColumn],
-            taskIds: [...prevState.columns[activeColumn].taskIds, newTaskId],
+            taskIds: [...prevState.columns[activeColumn].taskIds.filter((item=>item!= newTaskId)), newTaskId],
           },
         },
       };
@@ -235,6 +238,8 @@ function Task({ task, index, onTaskClick }) {
           className="card"
           onClick={() => onTaskClick(task)}
         >
+          {task.parentId && <p>Subtask of {task.parentId}</p>}
+          <p>{task.id}</p>
           <p>{task.title}</p>
           <p>{task.description}</p>
           {task.storyPoints && <span className="card-id">{task.storyPoints}</span>}
@@ -246,12 +251,14 @@ function Task({ task, index, onTaskClick }) {
 }
  
 function TaskCreationPopup({ isOpen, onClose, onSubmit, selectedTask, storyType, setStoryType }) {
+  
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [storyPoints, setStoryPoints] = useState(0);
  
   const handleSubmit = () => {
-    onSubmit({ title, description, storyPoints, storyType });
+    const id = selectedTask? selectedTask.id : `task-${uuidv4()}`;
+    onSubmit({ id,title, description, storyPoints, storyType });
     setTitle('');
     setDescription('');
     setStoryPoints(0);
@@ -275,9 +282,10 @@ function TaskCreationPopup({ isOpen, onClose, onSubmit, selectedTask, storyType,
       for (let subtask of subtasks) {
         let randomNumber = Math.floor(Math.random() * 1000);
         let paddedNumber = randomNumber.toString().padStart(3, '0');
-        let randomRDP = `RDP-${paddedNumber}`;
+        let randomRDP = `task-${paddedNumber}`;
  
         const taskData = {
+          parentId:selectedTask.id,
           id: randomRDP,
           title: subtask.title,
           description: subtask.description,
@@ -307,18 +315,23 @@ function TaskCreationPopup({ isOpen, onClose, onSubmit, selectedTask, storyType,
  
   return (
     <Modal isOpen={isOpen} onRequestClose={onClose} contentLabel="Task Creation Popup">
-      <h2>{selectedTask ? 'Edit Task' : 'Create New Task'}</h2>
+      <div style={{display: "flex", alignItems: "center", justifyContent :"space-between"}}>
+        <h2>{selectedTask ? 'Edit Task' : 'Create New Task'}</h2>
+        <p className='cancel' onClick={onClose}><XMarkIcon width={25} height={25}/></p>
+      </div>
       <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" />
-      <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" />
+      <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" rows={7} cols={50} />
       <input type="number" value={storyPoints} onChange={(e) => setStoryPoints(parseInt(e.target.value))} placeholder="Story Points" />
-      <select value={storyType} onChange={(e) => setStoryType(e.target.value)}>
+      <select value={storyType} onChange={(e) => setStoryType(e.target.value)} style={{marginBottom: "20px"}}>
         <option value="dev">Dev</option>
         <option value="qa">QA</option>
         <option value="unit-test">Unit Test</option>
       </select>
+      <div style={{display: "flex", alignItems: "center", justifyContent :"space-between"}}>
       <button onClick={handleSubmit}>{selectedTask ? 'Update' : 'Create'}</button>
-      <button onClick={onClose}>Cancel</button>
       <button onClick={generateSubtask}>Generate Subtask</button>
+
+      </div>
     </Modal>
   );
 }
