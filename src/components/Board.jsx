@@ -8,8 +8,24 @@ import { XMarkIcon } from '@heroicons/react/16/solid';
  
 const initialData = {
   tasks: {
-    'task-1': { id: 'task-1', storyId:'RDP-234',title: 'Deletion of user on User Platform', description: 'User have been deleted successfully All details attached below Endpoint APi: https://exmapleapi.api/ Figma Link: https://figmaexample/2joasdad.com', storyPoints: '2', storyType: 'dev' },
-    'task-2': { id: 'task-2', storyId:'RDP-234',title: 'title', description: 'create a post', storyPoints: '3', storyType: 'qa' },
+    'task-1': { id: 'task-1', storyId:'RDP-234',title: 'Create a Multiple Choice Question', description: 
+`As an educator, I want to create a multiple choice question using the Quiz Creation Tool so that I can assess my students' understanding of the material in a straightforward and effective manner.
+Acceptance Criteria:
+1.The user can access the "Create Question" interface.
+2.The user can select "Multiple Choice" as the question type.
+3.The user can input the question text and multiple answer options.
+4.The user can mark one or more correct answers.
+5.The user can add multimedia elements (images, videos) to the question if desired.
+6.The user can save the question to be included in a quiz.`
+, storyPoints: '2', storyType: 'Dev' },
+    'task-2': { id: 'task-2', storyId:'RDP-234',title: 'Mark Task as Completed', description: `
+      As a marketer, I want to customize the quiz theme so that the quiz aligns with my brand's identity.
+Acceptance Criteria:
+The user can access the "Customize Theme" interface.
+The user can choose from pre-designed themes.
+The user can upload custom backgrounds, logos, and select color schemes.
+The customized theme is applied to the quiz interface.
+      `, storyPoints: '3', storyType: 'Dev' },
   },
   columns: {
     'column-1': {
@@ -114,7 +130,8 @@ function Board() {
     setIsPopupOpen(true);
   };
  
-  const handleCreateTask = (taskData) => {
+  const handleCreateTask = async(taskData) => {
+    console.log(taskData)
     const newTaskId = taskData.id;
     const newTask = {
       id: taskData.id,
@@ -158,6 +175,25 @@ function Board() {
     })
  
     // setState(newState);
+
+    try {
+      const response = await fetch('http://localhost:3000/api/tasks', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newTask),
+      });
+      console.log(response);
+      if (!response.ok) {
+        throw new Error('Failed to save task');
+      }
+  
+      console.log('Task saved successfully');
+    } catch (error) {
+      console.error('Error saving task:', error);
+    }
+
     setIsPopupOpen(false);
   };
  
