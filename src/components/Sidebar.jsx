@@ -7,7 +7,7 @@ function Sidebar() {
     <div className="sidebar">
       <div className="logo">
         <span className="logo-icon">◆</span>
-        <span className="logo-text">Jira Clone</span>
+        <span className="logo-text">Sprint Vision</span>
       </div>
       <nav>
         <ul>

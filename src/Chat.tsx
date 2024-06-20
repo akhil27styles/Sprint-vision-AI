@@ -11,7 +11,7 @@ const model = new ChatGoogleGenerativeAI({  modelName: "gemini-pro",apiKey:apiKe
 export async function ask(title:any,desc:any,storyPoints:any)
   {
   const prompt = ChatPromptTemplate.fromTemplate(
-    "You are a blog writer who continue the blog, of the topic user is writing about {phrase} and the words limit is 500 and atleast .\n{format_instructions}\n{phrase}"
+    "You are an experienced developer who writes code, help the user with your SDLC development knowledge regarding {phrase} and the words limit is 1000 and atleast .\n{format_instructions}\n{phrase}"
   );
   const storySchema = z.object({
 
@@ -33,6 +33,12 @@ export async function ask(title:any,desc:any,storyPoints:any)
       }),
       length:z.number().describe('length of the subtasks object')
     }).describe("Breakdown of subtasks"),
+    unitTest: z.object({
+      scenarios: z.string().describe("scenarios based on description"),
+    }),
+    functionalTesting:z.object({
+      scenarios:z.string().describe('Functional testing scenerio'),
+    })
   });
   
   // Create the output parser
@@ -40,9 +46,9 @@ export async function ask(title:any,desc:any,storyPoints:any)
 
   const chain=prompt.pipe(model).pipe(outputParser);
   const res= await chain.invoke({
-    phrase:` Please break down the following story into subtasks: Title: ${title}, Description: ${desc}, Story Points: ${storyPoints}`,
+    phrase:` Please break down the following story into subtasks: Title: ${title}, Description: ${desc},  Story Points: ${storyPoints}, also give unitTest scenarios, functionalTesting scenarios based on ${desc} always use numbers to differentiate between test scenarios.`,
     format_instructions:outputParser.getFormatInstructions(),
   });
-  return res
   console.log(res);
+  return res
 }

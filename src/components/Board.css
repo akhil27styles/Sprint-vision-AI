@@ -75,16 +75,59 @@
     margin-bottom: 10px;
     user-select: none;
     cursor: pointer;
+    min-height: 150px;
+
 }
 
+.card-desc{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
 .card p {
     margin: 0 0 5px 0;
 }
 
 .card-id {
-    font-size: 12px;
-    color: #999;
+   background-color: #7289da; 
+  border-radius: 50%; 
+  padding: 4px 8px; 
+  color: #ffffff; 
+  display: inline-block;
+  margin-top: 8px; 
+  font-size: 12px; 
 }
+.fw-600{
+    font-weight: 600;
+}
+
+.priority-icon {
+    font-size: 16px; 
+  }
+  
+  .priority-icon.blocker {
+    color: red;
+  }
+  
+  .priority-icon.critical {
+    color: darkred;
+  }
+  
+  .priority-icon.high {
+    color: orange;
+  }
+  
+  .priority-icon.medium {
+    color: green;
+  }
+  
+  .priority-icon.low {
+    color: blue;
+  }
+  
+  .priority-icon.trivial {
+    color: purple;
+  }
 
 .no-issues {
     color: #666;
@@ -147,3 +190,27 @@
 .ReactModal__Content .cancel{
     cursor: pointer;
 }
+
+
+
+.d-flex {
+    display: flex;
+  }
+.flex-space-between {
+    justify-content: space-between;
+  }
+  .flex-end {
+    justify-content: flex-end;
+  }
+  
+.priority-flag.high {
+    color: red; 
+  }
+  
+  .priority-flag.medium {
+    color: yellow; 
+  }
+  
+  .priority-flag.low {
+    color: green; 
+  }

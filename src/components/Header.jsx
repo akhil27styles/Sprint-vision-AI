@@ -9,8 +9,8 @@ function Header() {
       <div className="project-info">
         <img src="/vite.svg" alt="Project Icon" className="project-icon" />
         <div>
-          <h1>JIRA Clone</h1>
-          <p>Software project</p>
+          <h1>Sprint Vision - AI</h1>
+          <p>AI Fication of SDLC</p>
         </div>
       </div>
       <div className="header-right">

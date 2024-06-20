@@ -5,10 +5,10 @@ import './Board.css';
 import { ask } from '../Chat'
 import { v4 as uuidv4 } from 'uuid';
 import { XMarkIcon } from '@heroicons/react/16/solid';
- 
+import {PriorityIcon} from '../PriorityIcon'
 const initialData = {
   tasks: {
-    'task-1': { id: 'task-1', storyId:'RDP-234',title: 'Create a Multiple Choice Question', description: 
+    'Task-1': { id: 'Task-1', storyId:'RDP-234',title: 'Create a Multiple Choice Question', description: 
 `As an educator, I want to create a multiple choice question using the Quiz Creation Tool so that I can assess my students' understanding of the material in a straightforward and effective manner.
 Acceptance Criteria:
 1.The user can access the "Create Question" interface.
@@ -17,26 +17,26 @@ Acceptance Criteria:
 4.The user can mark one or more correct answers.
 5.The user can add multimedia elements (images, videos) to the question if desired.
 6.The user can save the question to be included in a quiz.`
-, storyPoints: '2', storyType: 'Dev' },
-    'task-2': { id: 'task-2', storyId:'RDP-234',title: 'Mark Task as Completed', description: `
+, storyPoints: '2', storyType: 'Dev' ,priority:'high'},
+    'Task-2': { id: 'Task-2', storyId:'RDP-234',title: 'Mark Task as Completed', description: `
       As a marketer, I want to customize the quiz theme so that the quiz aligns with my brand's identity.
 Acceptance Criteria:
 The user can access the "Customize Theme" interface.
 The user can choose from pre-designed themes.
 The user can upload custom backgrounds, logos, and select color schemes.
 The customized theme is applied to the quiz interface.
-      `, storyPoints: '3', storyType: 'Dev' },
+      `, storyPoints: '3', storyType: 'Dev', priority:'low' },
   },
   columns: {
     'column-1': {
       id: 'column-1',
       title: 'TO DO',
-      taskIds: ['task-1'],
+      taskIds: ['Task-1'],
     },
     'column-2': {
       id: 'column-2',
       title: 'IN PROGRESS',
-      taskIds: ['task-2'],
+      taskIds: ['Task-2'],
     },
     'column-3': {
       id: 'column-3',
@@ -52,7 +52,7 @@ function Board() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [activeColumn, setActiveColumn] = useState('column-1');
   const [selectedTask, setSelectedTask] = useState(null);
-  const [storyType, setStoryType] = useState('dev'); // Added state for story type
+  const [storyType, setStoryType] = useState('Dev'); // Added state for story type
  
   const onDragEnd = (result) => {
     const { destination, source, draggableId } = result;
@@ -131,7 +131,6 @@ function Board() {
   };
  
   const handleCreateTask = async(taskData) => {
-    console.log(taskData)
     const newTaskId = taskData.id;
     const newTask = {
       id: taskData.id,
@@ -139,7 +138,7 @@ function Board() {
       description: taskData.description,
       storyPoints: taskData.storyPoints.toString(),
       storyType: taskData.storyType,
-      // ...(taskData.parentId)&& {parentId:taskData.parentId}
+      ...(taskData.parentId)&& {parentId:taskData.parentId}
     };
  
     // Check if activeColumn is defined
@@ -201,7 +200,7 @@ function Board() {
   return (
     <div className="board">
       <div className="board-header">
-        <h2>Board</h2>
+        <h2 style={{color:'white'}}>Board</h2>
         <div className="board-actions">
           <div className="user-avatars">
             {/* Add user avatars here */}
@@ -275,11 +274,14 @@ function Task({ task, index, onTaskClick }) {
           onClick={() => onTaskClick(task)}
         >
           {task.parentId && <p>Subtask of {task.parentId}</p>}
-          <p>{task.id}</p>
+          <p className='fw-600'>{task.id}</p>
           <p>{task.title}</p>
-          <p>{task.description}</p>
+          <p className='card-desc'>{task.description}</p>
           {task.storyPoints && <span className="card-id">{task.storyPoints}</span>}
+          <div className='d-flex flex-end'>
           <span className="card-story-type">{task.storyType}</span>
+           {PriorityIcon(task.priority)}
+        </div>
         </div>
       )}
     </Draggable>
@@ -305,13 +307,14 @@ function TaskCreationPopup({ isOpen, onClose, onSubmit, selectedTask, storyType,
     try {
       const res = await ask(title, description, storyPoints);
       const { development, unitTestscase, qa } = res.subtasks;
-      let updatedUnitTestscase = { ...unitTestscase, description: res.unitTest.scenarios };
+      const updatedUnitTestscase = { ...unitTestscase, description: res.unitTest.scenarios};
+      const updatedQaScenerios={...qa,description:res.functionalTesting.scenarios}
 
       // Create an array of subtasks
       const subtasks = [
-        { ...development, parentId: selectedTask.id, storyType: 'development' },
-        { ...updatedUnitTestscase, parentId: selectedTask.id, storyType: 'unitTestscase' },
-        { ...qa, parentId: selectedTask.id, storyType: 'qa' }
+        { ...development, parentId: selectedTask.id, storyType: 'Dev' },
+        { ...updatedUnitTestscase, parentId: selectedTask.id, storyType: 'UnitTest'},
+        { ...updatedQaScenerios, parentId: selectedTask.id, storyType: 'Qa'}
       ];
  
       // Sequentially create tasks
@@ -340,12 +343,12 @@ function TaskCreationPopup({ isOpen, onClose, onSubmit, selectedTask, storyType,
       setTitle(selectedTask.title);
       setDescription(selectedTask.description);
       setStoryPoints(parseInt(selectedTask.storyPoints) || 0);
-      setStoryType(selectedTask.storyType || 'dev');
+      setStoryType(selectedTask.storyType || 'Dev');
     } else {
       setTitle('');
       setDescription('');
       setStoryPoints(0);
-      setStoryType('dev');
+      setStoryType('Dev');
     }
   }, [selectedTask, setStoryType]);
  
@@ -359,9 +362,9 @@ function TaskCreationPopup({ isOpen, onClose, onSubmit, selectedTask, storyType,
       <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" rows={7} cols={50} />
       <input type="number" value={storyPoints} onChange={(e) => setStoryPoints(parseInt(e.target.value))} placeholder="Story Points" />
       <select value={storyType} onChange={(e) => setStoryType(e.target.value)} style={{marginBottom: "20px"}}>
-        <option value="dev">Dev</option>
-        <option value="qa">QA</option>
-        <option value="unit-test">Unit Test</option>
+        <option value="Dev">Dev</option>
+        <option value="Qa">QA</option>
+        <option value="UnitTest">Unit Test</option>
       </select>
       <div style={{display: "flex", alignItems: "center", justifyContent :"space-between"}}>
       <button onClick={handleSubmit}>{selectedTask ? 'Update' : 'Create'}</button>
