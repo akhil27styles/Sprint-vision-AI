@@ -1,216 +1,222 @@
 /* components/Board.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .board {
-    padding: 20px;
-    flex-grow: 1;
-    overflow-y: auto;
-    color: black;
+  padding: 20px;
+  flex-grow: 1;
+  overflow-y: auto;
+  color: black;
 }
 
 .board-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .board-actions {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .user-avatars {
-    display: flex;
-    margin-right: 15px;
+  display: flex;
+  margin-right: 15px;
 }
 
-.filter-button, .sort-button {
-    background-color: #2c2c2c;
-    color: #fff;
-    border: none;
-    padding: 8px 12px;
-    margin-left: 10px;
-    border-radius: 3px;
-    cursor: pointer;
+.filter-button,
+.sort-button {
+  background-color: #2c2c2c;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  margin-left: 10px;
+  border-radius: 3px;
+  cursor: pointer;
 }
 
 .board-columns {
-    display: flex;
-    gap: 20px;
+  display: flex;
+  gap: 20px;
 }
 
 .column {
-    background-color: #2c2c2c;
-    border-radius: 5px;
-    padding: 15px;
-    min-width: 280px;
-    max-width: 280px;
+  background-color: #2c2c2c;
+  border-radius: 5px;
+  padding: 15px;
+  min-width: 280px;
+  max-width: 280px;
 }
 
 .column h3 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 14px;
-    color: #999;
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 14px;
+  color: #999;
 }
 
 .add-task-button {
-    background-color: #2c2c2c;
-    color: #fff;
-    border: none;
-    padding: 5px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 40px;
-    margin-bottom: 10px;
+  background-color: #2c2c2c;
+  color: #fff;
+  border: none;
+  padding: 5px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 40px;
+  margin-bottom: 10px;
 }
 
 .task-list {
-    min-height: 100px;
+  min-height: 100px;
 }
 
 .card {
-    background-color: #363636;
-    border-radius: 3px;
-    padding: 10px;
-    margin-bottom: 10px;
-    user-select: none;
-    cursor: pointer;
-    min-height: 150px;
-
+  background-color: #363636;
+  border-radius: 3px;
+  padding: 10px;
+  margin-bottom: 10px;
+  user-select: none;
+  cursor: pointer;
+  min-height: 150px;
 }
 
-.card-desc{
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+.card-desc {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .card p {
-    margin: 0 0 5px 0;
+  margin: 0 0 5px 0;
 }
 
 .card-id {
-   background-color: #7289da; 
-  border-radius: 50%; 
-  padding: 4px 8px; 
-  color: #ffffff; 
+  background-color: #7289da;
+  border-radius: 50%;
+  padding: 4px 8px;
+  color: #ffffff;
   display: inline-block;
-  margin-top: 8px; 
-  font-size: 12px; 
+  margin-top: 8px;
+  font-size: 12px;
 }
-.fw-600{
-    font-weight: 600;
+.fw-600 {
+  font-weight: 600;
 }
 
 .priority-icon {
-    font-size: 16px; 
-  }
-  
-  .priority-icon.blocker {
-    color: red;
-  }
-  
-  .priority-icon.critical {
-    color: darkred;
-  }
-  
-  .priority-icon.high {
-    color: orange;
-  }
-  
-  .priority-icon.medium {
-    color: green;
-  }
-  
-  .priority-icon.low {
-    color: blue;
-  }
-  
-  .priority-icon.trivial {
-    color: purple;
-  }
+  font-size: 16px;
+}
+
+.priority-icon.blocker {
+  color: red;
+}
+
+.priority-icon.critical {
+  color: darkred;
+}
+
+.priority-icon.high {
+  color: orange;
+}
+
+.priority-icon.medium {
+  color: green;
+}
+
+.priority-icon.low {
+  color: blue;
+}
+
+.priority-icon.trivial {
+  color: purple;
+}
 
 .no-issues {
-    color: #666;
-    font-style: italic;
+  color: #666;
+  font-style: italic;
 }
 
 /* Modal Styles */
 .ReactModal__Overlay {
-    background-color: rgba(0, 0, 0, 0.75);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .ReactModal__Content {
-    background-color: #2c2c2c;
-    border-radius: 10px;
-    padding: 20px;
-    width: 400px;
-    max-width: 90%;
-    position: relative;
+  background-color: #2c2c2c;
+  border-radius: 10px;
+  padding: 20px;
+  width: 400px;
+  max-width: 90%;
+  position: relative;
 }
 
 .ReactModal__Content h2 {
-    margin-top: 0;
-    color: black;
-    margin: 0;
+  margin-top: 0;
+  color: white;
+  margin: 0;
 }
 
 .ReactModal__Content input,
 .ReactModal__Content textarea {
-    width: calc(100% - 20px);
-    margin-bottom: 10px;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #444;
-    color: #fff;
+  width: calc(100% - 20px);
+  margin-bottom: 10px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #444;
+  color: #fff;
 }
 
 .ReactModal__Content button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    min-width: 100px;
-    cursor: pointer;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  min-width: 100px;
+  cursor: pointer;
 }
 
 .ReactModal__Content button:first-of-type {
-    background-color: #4caf50;
-    color: #fff;
-    margin-right: 10px;
+  background-color: #4caf50;
+  color: #fff;
+  margin-right: 10px;
+}
+
+select.darkTheme {
+  color: #000;
 }
 
 .ReactModal__Content button:last-of-type {
-    background-color: #f44336;
-    color: #fff;
+  background-color: #f44336;
+  color: #fff;
 }
 
-.ReactModal__Content .cancel{
-    cursor: pointer;
+.ReactModal__Content .cancel {
+  cursor: pointer;
 }
-
-
 
 .d-flex {
-    display: flex;
-  }
+  display: flex;
+}
 .flex-space-between {
-    justify-content: space-between;
-  }
-  .flex-end {
-    justify-content: flex-end;
-  }
-  
+  justify-content: space-between;
+}
+.flex-end {
+  justify-content: flex-end;
+}
+
 .priority-flag.high {
-    color: red; 
-  }
-  
-  .priority-flag.medium {
-    color: yellow; 
-  }
-  
-  .priority-flag.low {
-    color: green; 
-  }
+  color: red;
+}
+
+.priority-flag.medium {
+  color: yellow;
+}
+
+.priority-flag.low {
+  color: green;
+}
