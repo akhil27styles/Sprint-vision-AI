@@ -19,7 +19,8 @@ export default function TaskCreationPopup({
 
   const handleSubmit = () => {
     const id = selectedTask ? selectedTask.id : `task-${uuidv4()}`;
-    onSubmit({ id, title, description, storyPoints, storyType });
+    const columnId = selectedTask ? selectedTask.columnId ? selectedTask.columnId : null : null;
+    onSubmit({ id, title, description, storyPoints, storyType, columnId });
     setTitle("");
     setDescription("");
     setStoryPoints(0);

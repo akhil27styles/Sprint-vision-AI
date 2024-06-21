@@ -11,6 +11,7 @@ const initialData = {
   tasks: {
     "Task-1": {
       id: "Task-1",
+      columnId: "column-1",
       storyId: "RDP-234",
       title: "Create a Multiple Choice Question",
       description: `As an educator, I want to create a multiple choice question using the Quiz Creation Tool so that I can assess my students' understanding of the material in a straightforward and effective manner.
@@ -29,6 +30,7 @@ Acceptance Criteria:
       id: "Task-2",
       storyId: "RDP-234",
       title: "Mark Task as Completed",
+      columnId: "column-2",
       description: `
       As a marketer, I want to customize the quiz theme so that the quiz aligns with my brand's identity.
 Acceptance Criteria:
@@ -147,12 +149,14 @@ function Board() {
 
   const handleCreateTask = async (taskData) => {
     const newTaskId = taskData.id;
+    const columnId = taskData.columnId ? taskData.columnId : activeColumn;
     const newTask = {
       id: taskData.id,
       title: taskData.title,
       description: taskData.description,
       storyPoints: taskData.storyPoints.toString(),
       storyType: taskData.storyType,
+      columnId,
       ...(taskData.parentId && { parentId: taskData.parentId }),
     };
 
@@ -163,9 +167,9 @@ function Board() {
     }
 
     // Check if the active column exists in the state
-    const activeColumnData = state.columns[activeColumn];
+    const activeColumnData = state.columns[columnId];
     if (!activeColumnData) {
-      console.error(`Column with id ${activeColumn} does not exist`);
+      console.error(`Column with id ${columnId} does not exist`);
       return;
     }
 
@@ -178,10 +182,10 @@ function Board() {
         },
         columns: {
           ...prevState.columns,
-          [activeColumn]: {
-            ...prevState.columns[activeColumn],
+          [columnId]: {
+            ...prevState.columns[columnId],
             taskIds: [
-              ...prevState.columns[activeColumn].taskIds.filter(
+              ...prevState.columns[columnId].taskIds.filter(
                 (item) => item != newTaskId
               ),
               newTaskId,
@@ -191,8 +195,6 @@ function Board() {
       };
       return newState;
     });
-
-    // setState(newState);
 
     try {
       const response = await fetch("http://localhost:3000/api/tasks", {
