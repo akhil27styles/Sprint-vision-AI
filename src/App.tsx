@@ -44,7 +44,7 @@
 //       {/* Display the generated subtasks on the main screen */}
 //       {subtasks && (
 //         <div className="subtasks">
-        
+
 //           {Object.keys(subtasks).map((key) => (
 //             <div key={key} className="subtask-card">
 //               <h4>{key.charAt(0).toUpperCase() + key.slice(1)}</h4>
@@ -91,14 +91,13 @@
 
 // export default App;
 
-
 // App.js
 
-import Sidebar from './components/Sidebar';
-import Header from './components/Header';
-import Board from './components/Board';
-import Rag from './Rag/Rag'
-import './App.css';
+import Sidebar from "./components/Sidebar";
+import Header from "./components/Header";
+import Board from "./components/Board";
+import Rag from "./Rag/Rag";
+import "./App.css";
 
 function App() {
   return (
@@ -107,7 +106,7 @@ function App() {
       <div className="main-content">
         <Header />
         <Board />
-        <Rag/>
+        <Rag />
       </div>
     </div>
   );
