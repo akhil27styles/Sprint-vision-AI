@@ -4,6 +4,7 @@ import Modal from "react-modal";
 import { ask } from "../Chat";
 import { v4 as uuidv4 } from "uuid";
 import { XMarkIcon } from "@heroicons/react/16/solid";
+import { toast,Toaster } from "react-hot-toast"; 
 import Dropdown from "./Dropdown";
 
 export default function TaskCreationPopup({
@@ -55,7 +56,7 @@ export default function TaskCreationPopup({
         },
         { ...updatedQaScenerios, parentId: selectedTask.id, storyType: "Qa" },
       ];
-
+      toast.success("Subtasks generated successfully!");
       // Sequentially create tasks
       for (let subtask of subtasks) {
         let randomNumber = Math.floor(Math.random() * 1000);
@@ -72,6 +73,7 @@ export default function TaskCreationPopup({
         };
 
         onSubmit(taskData); // Wait for task creation to complete
+       
       }
     } catch (error) {
       console.error("Error creating subtasks:", error);
@@ -100,6 +102,7 @@ export default function TaskCreationPopup({
       shouldCloseOnOverlayClick={false}
       shouldCloseOnEsc={false}
     >
+        <Toaster /> 
       <div className="col-span-2">
         <div
           style={{
