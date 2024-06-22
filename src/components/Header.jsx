@@ -1,6 +1,6 @@
 // components/Header.js
-import React from 'react';
-import './Header.css';
+import React from "react";
+import "./Header.css";
 // import img from "../../public/vite.svg"
 
 function Header() {
@@ -15,7 +15,12 @@ function Header() {
       </div>
       <div className="header-right">
         <button className="icon-button">?</button>
-        <button className="icon-button">GitHub</button>
+        <a
+          className="icon-button"
+          href="https://github.com/akhil27styles/Sprint-vision-AI"
+        >
+          GitHub
+        </a>
         <button className="icon-button">🌙</button>
         <img src="/avtar.png" alt="User Avatar" className="user-avatar" />
       </div>

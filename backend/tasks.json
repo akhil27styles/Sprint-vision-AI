@@ -33,5 +33,27 @@
     "description": "As a user, I want to delete a task from my to-do list so that I can remove tasks that are no longer relevant and have to show the notification when deleted.\nnotification message:'task deleted successfully'",
     "storyPoints": "2",
     "storyType": "dev"
+  },
+  {
+    "id": "task-134",
+    "title": "Create Multiple Choice Question",
+    "description": "This story will allow educators to create multiple choice questions to assess their students' understanding of the material.",
+    "storyPoints": "2",
+    "storyType": "Dev",
+    "columnId": "column-1",
+    "parentId": "Task-1"
+  },
+  {
+    "id": "task-041",
+    "title": "Functional Testing",
+    "description": "1. Verify that the user can create a multiple choice question by providing all the necessary information.\n2. Verify that the multiple choice question is created and saved successfully.\n3. Verify that the multiple choice question can be retrieved and displayed in a quiz.\n4. Verify that the user can edit the multiple choice question.\n5. Verify that the user can delete the multiple choice question.",
+    "storyPoints": "1",
+    "storyType": "Qa",
+    "columnId": "column-1",
+    "parentId": "Task-1"
+  }
+]: "UnitTest",
+    "columnId": "column-1",
+    "parentId": "Task-1"
   }
 ]
