@@ -191,8 +191,8 @@ select.darkTheme {
 }
 
 .ReactModal__Content button:last-of-type {
-  background-color: #f44336;
-  color: #fff;
+  background-color: white;
+  color: black;
 }
 
 .ReactModal__Content .cancel {

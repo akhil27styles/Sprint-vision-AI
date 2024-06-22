@@ -4,6 +4,7 @@ import Modal from "react-modal";
 import { ask } from "../Chat";
 import { v4 as uuidv4 } from "uuid";
 import { XMarkIcon } from "@heroicons/react/16/solid";
+import Dropdown from "./Dropdown";
 
 export default function TaskCreationPopup({
   isOpen,
@@ -19,7 +20,11 @@ export default function TaskCreationPopup({
 
   const handleSubmit = () => {
     const id = selectedTask ? selectedTask.id : `task-${uuidv4()}`;
-    const columnId = selectedTask ? selectedTask.columnId ? selectedTask.columnId : null : null;
+    const columnId = selectedTask
+      ? selectedTask.columnId
+        ? selectedTask.columnId
+        : null
+      : null;
     onSubmit({ id, title, description, storyPoints, storyType, columnId });
     setTitle("");
     setDescription("");
@@ -88,7 +93,7 @@ export default function TaskCreationPopup({
 
   return (
     <Modal
-      className="w-fit grid grid-cols-3"
+      className="grid grid-cols-3 w-2/3"
       isOpen={isOpen}
       onRequestClose={onClose}
       contentLabel="Task Creation Popup"
@@ -123,26 +128,26 @@ export default function TaskCreationPopup({
           onChange={(e) => setStoryPoints(parseInt(e.target.value))}
           placeholder="Story Points"
         />
-        <select
-          value={storyType}
-          onChange={(e) => setStoryType(e.target.value)}
-          style={{ marginBottom: "20px" }}
-        >
-          <option value="Dev">Dev</option>
-          <option value="Qa">QA</option>
-          <option value="UnitTest">Unit Test</option>
-        </select>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <button onClick={handleSubmit}>
-            {selectedTask ? "Update" : "Create"}
-          </button>
-          <button onClick={generateSubtask}>Generate Subtask</button>
+        <Dropdown options={["Dev", "Qa", "UnitTest"]} />
+        <div className="flex justify-end gap-4 mr-5">
+          <a
+            href="#_"
+            onClick={handleSubmit}
+            className="relative inline-flex items-center justify-start px-12 py-3 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group"
+          >
+            <span className="relative w-full text-left text-black transition-colors duration-300 ease-in-out ">
+              {selectedTask ? "Update" : "Create"}
+            </span>
+          </a>
+          <a
+            href="#_"
+            onClick={generateSubtask}
+            className="relative inline-flex items-center justify-start px-12 py-3 overflow-hidden font-medium transition-all bg-purple-600 rounded  group hover:text-black"
+          >
+            <span className="relative text-black transition duration-300 text-white ease">
+              Generate Subtask
+            </span>
+          </a>
         </div>
 
         <div className="comments text-white py-4">
@@ -166,60 +171,54 @@ export default function TaskCreationPopup({
         <p className="cancel float-end" onClick={onClose}>
           <XMarkIcon width={25} height={25} />
         </p>
-        <div>
-          <h1>Status</h1>
-          <select
-            className="darkTheme"
-            // value={storyType}
-            // onChange={(e) => setStoryType(e.target.value)}
-            style={{ marginBottom: "20px" }}
-          >
-            <option value="todo">Todo</option>
-            <option value="in-progress">In Progess</option>
-            <option value="done">Done</option>
-          </select>
-        </div>
-        <div>
-          <h1>Priority</h1>
-          <select
-            className="darkTheme"
-            // value={storyType}
-            // onChange={(e) => setStoryType(e.target.value)}
-            style={{ marginBottom: "20px" }}
-          >
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-          </select>
-        </div>
-        <div>
-          <h1>Asignee</h1>
-          <select
-            className="darkTheme"
-            // value={storyType}
-            // onChange={(e) => setStoryType(e.target.value)}
-            style={{ marginBottom: "20px" }}
-          >
-            <option value="akhil">Akhil Kumar Singh</option>
-            <option value="darsh">Darsh Patel</option>
-            <option value="paras">Paras Rawat</option>
-          </select>
-        </div>
-        <div>
-          <h1>Reporter</h1>
-          <select
-            className="darkTheme"
-            // value={storyType}
-            // onChange={(e) => setStoryType(e.target.value)}
-            style={{ marginBottom: "20px" }}
-          >
-            <option value="priyanshu">Priyanshu Dixit</option>
-          </select>
-        </div>
-        <div>
+        <div className="flex flex-col gap-8">
           <div>
-            <label>Created At:</label>
-            <label>Updated At:</label>
+            <h1>Status</h1>
+            <Dropdown options={["Todo", "In Progress", "Done"]} />
+          </div>
+          <div>
+            <h1>Priority</h1>
+            <Dropdown options={["Low", "Medium", "High"]} />
+          </div>
+          <div>
+            <h1>Asignee</h1>
+            <Dropdown
+              options={["Akhil Kumar Singh", "Darsh Patel", "Paras Rawat"]}
+            />
+          </div>
+          <div>
+            <h1>Reporter</h1>
+            <Dropdown options={["Priyanshu Dixit"]} />
+          </div>
+          <div>
+            <div>
+              {/* <p>
+                Created At:
+                {new Date()
+                  .toLocaleString("en-IN", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                  })
+                  .replace(",", "")}
+              </p>
+              <p>
+                Updated At:
+                {new Date()
+                  .toLocaleString("en-IN", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                  })
+                  .replace(",", "")}
+              </p> */}
+            </div>
           </div>
         </div>
       </div>
